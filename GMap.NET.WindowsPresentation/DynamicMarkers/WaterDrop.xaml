@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="GMap.NET.WindowsPresentation.WaterDrop"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Canvas Width="48" Height="48">
+        <Path x:Name="bigCircle" Width="30" Height="48" Stretch="Fill" StrokeThickness="0.2" StrokeLineJoin="Round" 
+              Stroke="Black" Fill="#FC6355" Canvas.Left="9" Canvas.Top="0" 
+              Data="M 16,0.5 
+              C 21.2127,0.521273 25.4414,5.02504 25.4497,10.2495
+              C 25.4591,16.2045 15.9056,21.372 15.9279,31.5256
+              C 15.9212,21.3563 6.62311,16.1316 6.61372,10.2495
+              C 6.60538,5.02504 10.8098,0.521273 16,0.5 Z "/>
+        <Ellipse Width="22" Height="22" Stretch="Fill" Fill="White" Stroke="BlueViolet" StrokeThickness="0.3" 
+                 Canvas.Left="13" Canvas.Top="4"/>
+        <TextBlock Name="wayPointIndex" Foreground="DarkBlue" FontSize="14" Text="88" FontWeight="Medium"
+                   Canvas.Left="16" Canvas.Top="6" TextAlignment="Center"/>
+    </Canvas>
+</UserControl>

@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="MapTest.Views.MapTestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:map="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation">
+    <Grid>     
+        <map:GMapControl x:Name="GMapCtrl"/>
+        <Button Content="111" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="Button111_Click_"/>
+        <Button Content="222" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="Button222_Click"/>
+    </Grid>
+</UserControl>

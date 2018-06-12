@@ -1,0 +1,16 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="GMap.NET.WindowsPresentation.Callout">
+    <Grid>
+        <Path Width="140" Height="110" Stretch="Fill" StrokeLineJoin="Round" Stroke="#000000" Opacity="0.8"
+              Fill="#F1B2B2" Data="M 455.135,364.683L 549.136,364.683C 551.898,364.683 554.135,366.92 554.135,369.682
+              L 554.135,424.682C 554.135,427.444 551.898,429.682 549.136,429.682L 479.601,429.682L 468.219,447.557
+              L 471.969,429.682L 455.135,429.682C 452.375,429.682 450.136,427.444 450.136,424.682L 450.136,369.682
+              C 450.136,366.92 452.375,364.683 455.135,364.683 Z "/>
+
+        <TextBlock x:Name="TagContent" Text="航点：&#x0a;经度：&#x0a;纬度：&#x0a;高度：&#x0a;空速：" FontSize="13" Width="130"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,1,0,0"/>
+
+    </Grid>
+</UserControl>

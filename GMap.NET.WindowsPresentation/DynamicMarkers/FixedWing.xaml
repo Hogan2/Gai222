@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="GMap.NET.WindowsPresentation.FixedWing"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Width="154" Height="140">
+        <Grid Width="64" Height="68" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,0">
+            <Path Fill="#FF0096FF" VerticalAlignment="Center" HorizontalAlignment="Center"
+              Data="M 32,64 L 20,68L 20,63L 27.5,58L 27.5,38L 0,47L 0,40L 27.5,24.5L 27.5,3.5
+              C 27.5,3.5 28.5,0.1 32,0 C 32,0 35.5,0.1 36.5,3.5
+              L 36.5,24.5L 64,40L 64,47L 36.5,38L 36.5,58L 44,63L 44,68L 32,64 Z " />
+            <Grid.RenderTransform>
+                <RotateTransform CenterX="32" CenterY="34" Angle="{Binding Bearing}"/>
+            </Grid.RenderTransform>
+        </Grid>
+        <Grid x:Name="MyTag" Visibility="Visible" Width="140" Height="106" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Path Width="140" Height="106" Stretch="Fill" StrokeLineJoin="Round" Stroke="#000000" Opacity="0.7"
+              Fill="#F1B2B2" Data="M 455.135,364.683L 549.136,364.683C 551.898,364.683 554.135,366.92 554.135,369.682
+              L 554.135,424.682C 554.135,427.444 551.898,429.682 549.136,429.682L 479.601,429.682L 468.219,447.557
+              L 471.969,429.682L 455.135,429.682C 452.375,429.682 450.136,427.444 450.136,424.682L 450.136,369.682
+              C 450.136,366.92 452.375,364.683 455.135,364.683 Z "/>
+            <TextBlock x:Name="TagContent" FontSize="13" FontFamily="Century Gothic" Margin="0,1,0,0"
+                       Text = "{Binding TagetText}" Width="130" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        </Grid>
+    </Grid>
+    
+</UserControl>
