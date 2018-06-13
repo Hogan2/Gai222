@@ -35,15 +35,15 @@ namespace GMap.NET.WindowsPresentation
         /// 
         /// </summary>
         /// <param name="points"></param>
-        public GMapRoute(IEnumerable<PointLatLng> points, Color color, int strokeThickness, GMapControl map)
+        public GMapRoute(Markers_ID markers_ID, Markers_ZIndex markers_ZIndex, IEnumerable<PointLatLng> points, Color color, int strokeThickness, GMapControl map)
         {
-            ZIndex = (int)Markers_ZIndex.RouteMarker;
-            ID = (int)Markers_ID.RouteMarker;
+            ZIndex = (int)markers_ZIndex;//(int)Markers_ZIndex.RouteMarker;
+            ID = (int)markers_ID;//(int)Markers_ID.RouteMarker;
             Map = map;
             Points = new List<PointLatLng>(points);
             Shape = new Path() { Stroke = new SolidColorBrush(color), StrokeThickness = strokeThickness };
-            Map.RemoveMarkerAtID(Map, (int)Markers_ID.RouteMarker);
-            Map.Markers.Add(this);
+            Map.RemoveMarkerAtID(Map, ID);
+            if (Points.Count() > 1) Map.Markers.Add(this);
         }
         /// <summary>
         /// 

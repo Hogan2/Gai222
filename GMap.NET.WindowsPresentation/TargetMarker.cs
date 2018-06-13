@@ -1,28 +1,46 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace GMap.NET.WindowsPresentation
 {
     public class TargetMarker : GMapMarker
     {
         readonly FixedWing MyTarget;
-
-        //public double Bearing { get; set; }
-        public TargetMarker(PointLatLng pos, double bearing, GMapControl map)
+        bool IsTagVisible = false;
+        public TargetMarker(PointLatLng pos, float bearing, GMapControl map)
         {
             ID = (int)Markers_ZIndex.TargetMarker;
             ZIndex = (int)Markers_ZIndex.TargetMarker;
             Map = map;
-            Position = pos;
             MyTarget = new FixedWing();
             Shape = MyTarget;
-            Bearing = bearing;
             Offset = new Point(-32, -106);
-            TagetText = "航向：" + Bearing.ToString("0.00") + "\n纬度：" + Math.Abs(Position.Lat).ToString("0.000000") +
-                (Position.Lat >= 0 ? " N" : " S") + "\n经度：" + Math.Abs(Position.Lng).ToString("0.000000") +
-                (Position.Lng >= 0 ? " E" : " W") + "\n高度：" + "100" + " m" + "\n空速：" + "30" + " m/s";
-            //Shape.RenderTransform = new RotateTransform(Bearing, 32, 34);
+            UpdateTargetProperty(this, pos, bearing >= 0.0f && bearing <= 360.0f ? bearing : 0.0f);
             Map.Markers.Add(this);
+
+            MyTarget.MouseEnter += new MouseEventHandler(MyTarget_MouseEnter);
+            MyTarget.MouseLeave += new MouseEventHandler(MyTarget_MouseLeave);
+            MyTarget.MouseDown += new MouseButtonEventHandler(MyTarget_MouseDown);
+        }
+
+        private void MyTarget_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Map.IsWPMarkerCanAdd = true;
+        }
+
+        private void MyTarget_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Map.IsWPMarkerCanAdd = false;
+        }
+
+        private void MyTarget_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (!IsTagVisible) MyTarget.MyTag.Visibility = Visibility.Visible;
+                else MyTarget.MyTag.Visibility = Visibility.Hidden;
+                IsTagVisible = !IsTagVisible;
+            }
         }
     }
 }

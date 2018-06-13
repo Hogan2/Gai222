@@ -11,7 +11,7 @@
                 <RotateTransform CenterX="32" CenterY="34" Angle="{Binding Bearing}"/>
             </Grid.RenderTransform>
         </Grid>
-        <Grid x:Name="MyTag" Visibility="Visible" Width="140" Height="106" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <Grid x:Name="MyTag" Visibility="Hidden" Width="140" Height="106" VerticalAlignment="Top" HorizontalAlignment="Center">
             <Path Width="140" Height="106" Stretch="Fill" StrokeLineJoin="Round" Stroke="#000000" Opacity="0.7"
               Fill="#F1B2B2" Data="M 455.135,364.683L 549.136,364.683C 551.898,364.683 554.135,366.92 554.135,369.682
               L 554.135,424.682C 554.135,427.444 551.898,429.682 549.136,429.682L 479.601,429.682L 468.219,447.557

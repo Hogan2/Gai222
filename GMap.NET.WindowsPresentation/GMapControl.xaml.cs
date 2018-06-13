@@ -42,7 +42,7 @@ namespace GMap.NET.WindowsPresentation
         /// 
         /// </summary>
         // Using a DependencyProperty as the backing store for point.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MapPointProperty = DependencyProperty.Register("MapPoint", 
+        public static readonly DependencyProperty MapPointProperty = DependencyProperty.Register("MapPoint",
             typeof(Point), typeof(GMapControl), new PropertyMetadata(new Point(), OnMapPointPropertyChanged));
 
         private static void OnMapPointPropertyChanged(DependencyObject source,
@@ -54,8 +54,8 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         /// 
         /// </summary>
-        public static readonly DependencyProperty MapProviderProperty = DependencyProperty.Register("MapProvider", 
-            typeof(GMapProvider), typeof(GMapControl), new UIPropertyMetadata(EmptyProvider.Instance, 
+        public static readonly DependencyProperty MapProviderProperty = DependencyProperty.Register("MapProvider",
+            typeof(GMapProvider), typeof(GMapControl), new UIPropertyMetadata(EmptyProvider.Instance,
                 new PropertyChangedCallback(MapProviderPropertyChanged)));
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         /// 
         /// </summary>
-        public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register("Zoom", typeof(double), 
-            typeof(GMapControl), new UIPropertyMetadata(0.0, new PropertyChangedCallback(ZoomPropertyChanged), 
+        public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register("Zoom", typeof(double),
+            typeof(GMapControl), new UIPropertyMetadata(0.0, new PropertyChangedCallback(ZoomPropertyChanged),
                 new CoerceValueCallback(OnCoerceZoom)));
 
         /// <summary>
@@ -2523,8 +2523,14 @@ namespace GMap.NET.WindowsPresentation
         #endregion
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region my codes
+
+        List<PointLatLng> RouteMarkerPoints = new List<PointLatLng>();
+        List<PointLatLng> TrackMarkerPoints = new List<PointLatLng>();
+        PointLatLng TrackMarkerPos_Old;
+        PointLatLng TrackMarkerPos_New;
+
         /// <summary>
-        /// 航点marker是否可拖拽
+        /// 是否可拖拽航点marker
         /// </summary>
         private bool isWPMakerCanDrag = false;
 
@@ -2533,6 +2539,10 @@ namespace GMap.NET.WindowsPresentation
             get { return isWPMakerCanDrag; }
             set { isWPMakerCanDrag = value; }
         }
+
+        /// <summary>
+        /// 是否可添加航点marker
+        /// </summary>
         private bool isWPMarkerCanAdd = true;
 
         public bool IsWPMarkerCanAdd
@@ -2540,11 +2550,9 @@ namespace GMap.NET.WindowsPresentation
             get { return isWPMarkerCanAdd; }
             set { isWPMarkerCanAdd = value; }
         }
-        
-        List<PointLatLng> points = new List<PointLatLng>();
 
         /// <summary>
-        /// 删除对应ID的marker
+        /// 删除选定ID的marker
         /// </summary>
         /// <param name="gMapControl"></param>
         /// <param name="id"></param>
@@ -2557,7 +2565,7 @@ namespace GMap.NET.WindowsPresentation
             };
         }
         /// <summary>
-        /// 删除对应ZIndex的marker
+        /// 删除选定ZIndex的marker
         /// </summary>
         /// <param name="gMapControl"></param>
         /// <param name="zindex"></param>
@@ -2570,11 +2578,11 @@ namespace GMap.NET.WindowsPresentation
             };
         }
         /// <summary>
-        /// 删除选定的航点marker
+        /// 删除鼠标捕获的航点marker
         /// </summary>
         /// <param name="gMapControl"></param>
         public void RemoveSelectedMarker(GMapControl gMapControl)
-        {             
+        {
             var clear = gMapControl.Markers.Where(marker => marker.ID >= 10000);
             while (clear.Count() > 0)
             {
@@ -2589,25 +2597,40 @@ namespace GMap.NET.WindowsPresentation
             };
         }
 
+        /// <summary>
+        /// 刷新航点路径Marker
+        /// </summary>
+        /// <param name="gMapControl"></param>
         public void UpdateRouteMarker(GMapControl gMapControl)
         {
-            var ssss = gMapControl.Markers.Where(marker => marker.ID == (int)Markers_ID.WaypointMarker 
+            var ssss = gMapControl.Markers.Where(marker => marker.ID == (int)Markers_ID.WaypointMarker
             || marker.ID >= 10000);
-            gMapControl.points.Clear();
+            gMapControl.RouteMarkerPoints.Clear();
             for (int i = 0; i < ssss.Count(); i++)
             {
-                gMapControl.points.Add(ssss.ElementAt(i).Position);
+                gMapControl.RouteMarkerPoints.Add(ssss.ElementAt(i).Position);
             }
-            if (gMapControl.points.Count() > 0) { GMapRoute gMapRoute = new GMapRoute(gMapControl.points, Colors.Yellow, 4, gMapControl); }
+            GMapRoute gMapRoute = new GMapRoute(Markers_ID.RouteMarker, Markers_ZIndex.RouteMarker, 
+                gMapControl.RouteMarkerPoints, Colors.Yellow, 4, gMapControl);
         }
-        //public void UpdateWPNumber(GMapControl gMapControl)
-        //{
-        //    var wpmarker = gMapControl.Markers.Where(marker => marker.ID == 2);
-        //    for (int i = 0; i < wpmarker.Count(); i++)
-        //    {
-        //        wpmarker.ElementAt(i).WPNumber = (i + 1);
-        //    }
-        //}
+
+        /// <summary>
+        /// 刷新航迹Marker
+        /// </summary>
+        /// <param name="gMapControl"></param>
+        /// <param name="targetMarker"></param>
+        /// <param name="pointLatLng"></param>
+        /// <param name="bearing"></param>
+        public void UpdateTrackMarker(GMapControl gMapControl, TargetMarker targetMarker, PointLatLng pointLatLng, float bearing)
+        {
+            TrackMarkerPos_Old = targetMarker.Position;
+            targetMarker.UpdateTargetProperty(targetMarker, pointLatLng, bearing);
+            TrackMarkerPos_New = targetMarker.Position;
+
+            if (TrackMarkerPos_New != TrackMarkerPos_Old) TrackMarkerPoints.Add(TrackMarkerPos_New);
+            GMapRoute gMapRoute = new GMapRoute(Markers_ID.TrackMarker, Markers_ZIndex.TrackMarker,
+                TrackMarkerPoints, Colors.Red, 4, gMapControl);
+        }
         #endregion
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }

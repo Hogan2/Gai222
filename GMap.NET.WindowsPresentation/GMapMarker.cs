@@ -257,38 +257,39 @@ namespace GMap.NET.WindowsPresentation
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region my codes
+        /// <summary>
+        /// Markers ID 枚举
+        /// </summary>
         public enum Markers_ID
         {
             RouteMarker = 1,
+            TrackMarker,
             PolygonMarker,
             WaypointMarker,
             TargetMarker,
             TagMarker
         }
+        /// <summary>
+        /// Markers Zindex 枚举 (Zindex越大,图层越靠前)
+        /// </summary>
         public enum Markers_ZIndex
         {
             RouteMarker = 1,
+            TrackMarker,
             PolygonMarker,
             WaypointMarker,
             TargetMarker,
             TagMarker
         }
+
+        /// <summary>
+        /// Marker ID
+        /// </summary>
         public int ID { get; set; }
-        //private int wpNumber;
 
-        //public int WPNumber
-        //{
-        //    get { return wpNumber; }
-        //    set
-        //    {
-        //        wpNumber = value;
-        //        if (this.PropertyChanged != null)
-        //        {
-        //            this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("WPNumber"));
-        //        }
-        //    }
-        //}
-
+        /// <summary>
+        /// 航点编号属性(依赖属性, 与航点编号Text绑定)
+        /// </summary>
         public int WPNumber
         {
             get { return (int)GetValue(WPNumberProperty); }
@@ -299,21 +300,9 @@ namespace GMap.NET.WindowsPresentation
         public static readonly DependencyProperty WPNumberProperty =
             DependencyProperty.Register("WPNumber", typeof(int), typeof(GMapMarker), new PropertyMetadata(0));
 
-        //private string tagText;
-        //public string TagText
-        //{
-        //    get { return tagText; }
-        //    set
-        //    {
-        //        tagText = value;
-        //        if (this.PropertyChanged != null)
-        //        {
-        //            this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("TagText"));
-        //        }
-        //    }
-        //}
-
-
+        /// <summary>
+        /// 航点标签属性(依赖属性, 与航点标签Text绑定)
+        /// </summary>
         public string TagText
         {
             get { return (string)GetValue(TagTextProperty); }
@@ -323,6 +312,10 @@ namespace GMap.NET.WindowsPresentation
         // Using a DependencyProperty as the backing store for TagText.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TagTextProperty =
             DependencyProperty.Register("TagText", typeof(string), typeof(GMapMarker), new PropertyMetadata(""));
+
+        /// <summary>
+        /// 活动目标(飞机\坦克等)标签属性(依赖属性, 与目标标签Text绑定)
+        /// </summary>
         public string TagetText
         {
             get { return (string)GetValue(TagetTextProperty); }
@@ -333,17 +326,33 @@ namespace GMap.NET.WindowsPresentation
         public static readonly DependencyProperty TagetTextProperty =
             DependencyProperty.Register("TagetText", typeof(string), typeof(GMapMarker), new PropertyMetadata(""));
 
-        public double Bearing
+        /// <summary>
+        /// 活动目标(飞机\坦克等)旋转方向属性(依赖属性, 与目标RotateTransform绑定)
+        /// </summary>
+        public float Bearing
         {
-            get { return (double)GetValue(BearingProperty); }
+            get { return (float)GetValue(BearingProperty); }
             set { SetValue(BearingProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Bearing.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BearingProperty =
-            DependencyProperty.Register("Bearing", typeof(double), typeof(GMapMarker), new PropertyMetadata(0.0));
+            DependencyProperty.Register("Bearing", typeof(float), typeof(GMapMarker), new PropertyMetadata(0.0f));
 
-
+        /// <summary>
+        /// 更新活动目标(飞机\坦克等)属性
+        /// </summary>
+        /// <param name="targetMapMarker"></param>
+        /// <param name="pos"></param>
+        /// <param name="bearing"></param>
+        public void UpdateTargetProperty(GMapMarker targetMapMarker, PointLatLng pos, float bearing)
+        {
+            targetMapMarker.Position = pos;
+            targetMapMarker.Bearing = bearing >= 0.0f && bearing <= 360.0f ? bearing : 0.0f;
+            targetMapMarker.TagetText = "航向：" + targetMapMarker.Bearing.ToString("0.00") + "\n纬度：" + Math.Abs(targetMapMarker.Position.Lat).ToString("0.000000") +
+            (targetMapMarker.Position.Lat >= 0 ? " N" : " S") + "\n经度：" + Math.Abs(targetMapMarker.Position.Lng).ToString("0.000000") +
+            (targetMapMarker.Position.Lng >= 0 ? " E" : " W") + "\n高度：" + "100" + " m" + "\n空速：" + "30" + " m/s";
+        }
         #endregion
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
