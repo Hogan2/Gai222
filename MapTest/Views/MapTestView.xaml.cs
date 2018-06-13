@@ -2,11 +2,10 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace MapTest.Views
 {
@@ -22,27 +21,31 @@ namespace MapTest.Views
         double lng = 103.9468;
         float bear = 0.0f;
 
+        private DispatcherTimer _timer = new DispatcherTimer();
 
         public MapTestView()
         {
             InitializeComponent();
             IniMap();
 
+            _timer.Tick += OnTick;
+            _timer.Interval = TimeSpan.FromMilliseconds(50);
+
             TargetMarker1 = new TargetMarker(GMapCtrl.Position, 45.0f, GMapCtrl);
             MouseDoubleClick += new MouseButtonEventHandler(MapTest_MouseDoubleClick);
         }
 
-        private async void UpdateTime()
+        /// <summary>
+        /// 定时器处理事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTick(object sender, EventArgs e)
         {
-            while (true)
-            {
-                await Task.Run(() => Thread.Sleep(50));
-                GMapCtrl.UpdateTrackMarker(GMapCtrl, TargetMarker1, new PointLatLng(lat, lng), bear);
-                //lat += 0.0001;
-                lng += 0.0001;
-                bear += 1.0f;
-                //await Task.Delay(0);
-            }
+            GMapCtrl.UpdateTrackMarker(GMapCtrl, TargetMarker1, new PointLatLng(lat, lng), bear);
+            //lat += 0.0001;
+            lng += 0.0001;
+            if (bear < 90.0) bear += 1.0f;
         }
 
         void IniMap()
@@ -107,7 +110,8 @@ namespace MapTest.Views
         /// <param name="e"></param>
         private void Button333_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(UpdateTime), null);
+            //Dispatcher.BeginInvoke(new Action(UpdateTime), null);
+            _timer.Start();
         }
     }
 }
