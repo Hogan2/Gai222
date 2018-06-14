@@ -29,10 +29,6 @@ namespace WpfApp2
         public static readonly DependencyProperty Name3Property =
             DependencyProperty.Register("Name3", typeof(string), typeof(Student2), new PropertyMetadata(""));
 
-        public void Branchtest()
-        {
-
-        }
 
     }
 }
