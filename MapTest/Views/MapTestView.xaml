@@ -4,10 +4,31 @@
              xmlns:map="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation">
     <Grid>
         <map:GMapControl x:Name="GMapCtrl"/>
-        <Button Content="111" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="Button111_Click_"/>
-        <Button Content="222" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="Button222_Click"/>
-        <Button Content="333" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="Button333_Click"/>
 
+        <ToolBar HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button Content="添加航点" Click="Button1_Click"/>
+            <Button Content="删除航点" Click="Button1_1_Click"/>
+            <Button Content="添加航线" Click="Button1_2_Click"/>
+            <Button Content="保存航线" Click="Button1_3_Click"/>
+            <Button Content="读取航线" Click="Button1_4_Click"/>
+            <Separator Background="Gray"/>
+            <Button Content="添加目标" Click="Button2_Click"/>
+            <Button Content="删除目标" Click="Button2_1_Click"/>
+            <Button x:Name="start" Content="开始" Click="Button6_Click"/>
+            <Button Content="清除航迹" Click="Button7_Click"/>
+            <Button x:Name="hide" Content="隐藏航迹" Click="Button8_Click"/>
+            <Separator Background="Gray"/>
+            <Button Content="添加多边形标签" Click="Button3_Click"/>
+            <Button Content="删除多边形标签" Click="Button3_1_Click"/>
+            <Button Content="存储多边形标签" Click="Button3_2_Click"/>
+
+            <Separator Background="Gray"/>
+            <Button Content="添加文本" Click="Button4_Click"/>
+            <Button Content="删除文本" Click="Button4_1_Click"/>
+            <Button x:Name="focus" Content="文本编辑" Click="Button4_2_Click"/>
+            <Separator Background="Gray"/>
+            <Button Content="测距" Click="Button5_Click"/>
+        </ToolBar>
         <!--<Grid HorizontalAlignment="Right" VerticalAlignment="Center" Width="220">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>

@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace GMap.NET.WindowsPresentation
 {
     /// <summary>
-    /// Callout.xaml 的交互逻辑
+    /// Text_Marker.xaml 的交互逻辑
     /// </summary>
-    public partial class Callout : UserControl
+    public partial class Text_Marker : UserControl
     {
-        public Callout(/*string tagcontent*/)
+        public Text_Marker()
         {
             InitializeComponent();
-            //TagContent.Text = tagcontent;
         }
     }
 }

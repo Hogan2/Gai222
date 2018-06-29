@@ -9,9 +9,9 @@ namespace GMap.NET.WindowsPresentation
         bool IsTagVisible = false;
         public TargetMarker(PointLatLng pos, float bearing, GMapControl map)
         {
-            ID = (int)Markers_ZIndex.TargetMarker;
-            ZIndex = (int)Markers_ZIndex.TargetMarker;
-            Map = map;
+            //ID = (int)Markers_ZIndex.TargetMarker;
+            //ZIndex = (int)Markers_ZIndex.TargetMarker;
+            //Map = map;
             MyTarget = new FixedWing();
             Shape = MyTarget;
             Offset = new Point(-32, -106);

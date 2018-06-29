@@ -11,14 +11,34 @@ namespace GMap.NET.WindowsPresentation
     /// </summary>
     public class GMapPolygon : GMapMarker, IShapable
     {
+        Brush myStroke;
+        Brush myFill;
+        double myStrokeThickness;
+        double myOpacity;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="points"></param>
-        public GMapPolygon(IEnumerable<PointLatLng> points)
+        public GMapPolygon(int polygon_ID, int polygon_ZIndex, IEnumerable<PointLatLng> points, Color color, double strokeThickness, double opacity, GMapControl map)
         {
+            Map = map;
+            ZIndex = polygon_ZIndex;
+            ID = polygon_ID;
             Points = new List<PointLatLng>(points);
+
+            myStroke = new SolidColorBrush(color);
+            myFill= new SolidColorBrush(color);
+            myStrokeThickness = strokeThickness;
+            myOpacity = opacity;
+
+            mypolygon = new Polyline();
+            Shape = mypolygon;
+
+            if (Points.Count > 2) Map.Markers.Add(this);
+
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,15 +97,15 @@ namespace GMap.NET.WindowsPresentation
                     myPath.Effect = ef;
                 }
 
-                myPath.Stroke = Brushes.MidnightBlue;
-                myPath.StrokeThickness = 5;
+                myPath.Stroke = myStroke;
+                myPath.StrokeThickness = myStrokeThickness;
                 myPath.StrokeLineJoin = PenLineJoin.Round;
                 myPath.StrokeStartLineCap = PenLineCap.Triangle;
                 myPath.StrokeEndLineCap = PenLineCap.Square;
 
-                myPath.Fill = Brushes.AliceBlue;
+                myPath.Fill = myFill;
 
-                myPath.Opacity = 0.6;
+                myPath.Opacity = myOpacity;
                 myPath.IsHitTestVisible = false;
             }
             return myPath;

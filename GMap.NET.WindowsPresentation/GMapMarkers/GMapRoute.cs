@@ -3,6 +3,7 @@ namespace GMap.NET.WindowsPresentation
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Effects;
     using System.Windows.Shapes;
@@ -31,19 +32,30 @@ namespace GMap.NET.WindowsPresentation
     /// </summary>
     public class GMapRoute : GMapMarker, IShapable
     {
+        //Path Path1;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="points"></param>
-        public GMapRoute(Markers_ID markers_ID, Markers_ZIndex markers_ZIndex, IEnumerable<PointLatLng> points, Color color, int strokeThickness, GMapControl map)
+        public GMapRoute(int markers_ID, int markers_ZIndex, IEnumerable<PointLatLng> points, Color color, int strokeThickness, GMapControl map)
         {
-            ZIndex = (int)markers_ZIndex;//(int)Markers_ZIndex.RouteMarker;
-            ID = (int)markers_ID;//(int)Markers_ID.RouteMarker;
+            ZIndex =markers_ZIndex;
+            ID = markers_ID;
             Map = map;
             Points = new List<PointLatLng>(points);
-            Shape = new Path() { Stroke = new SolidColorBrush(color), StrokeThickness = strokeThickness };
-            Map.RemoveMarkerAtID(Map, ID);
+            Path1 = new Path() { Stroke = new SolidColorBrush(color), StrokeThickness = strokeThickness };
+            Shape = Path1;
             if (Points.Count() > 1) Map.Markers.Add(this);
+        }
+
+        public void IsVisable(int id, bool isVisable)
+        {
+            var clear = Map.Markers.Where(marker => marker.ID == id);
+            if (clear.Count() > 0)
+            {
+                if(isVisable) clear.ElementAt(0).Path1.Visibility = Visibility.Visible;
+                else clear.ElementAt(0).Path1.Visibility = Visibility.Hidden;
+            }            
         }
         /// <summary>
         /// 

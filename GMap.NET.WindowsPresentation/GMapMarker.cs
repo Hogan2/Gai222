@@ -3,9 +3,11 @@ namespace GMap.NET.WindowsPresentation
 {
     using GMap.NET;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Shapes;
 
     /// <summary>
     /// GMap.NET marker
@@ -257,29 +259,42 @@ namespace GMap.NET.WindowsPresentation
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region my codes
-        /// <summary>
-        /// Markers ID 枚举
-        /// </summary>
-        public enum Markers_ID
+
+        public Callout MyCallout;
+        public Path Path1;
+        public Polyline mypolygon;
+        public bool istagLineVisable = false;
+        public List<PointLatLng> MTTrackPoints = new List<PointLatLng>();
+        public enum GMapMarkers_ID
         {
-            RouteMarker = 1,
-            TrackMarker,
-            PolygonMarker,
-            WaypointMarker,
-            TargetMarker,
-            TagMarker
+            PolygonPath = 1,
+            AirRoute=202,
+            MT_Track=403,
+            PolygonMarker = 604,
+            TextMarker=805,
+            CourseBeacon=1006,
+            MovingTarget=1207,
+            MT_Tag = 1408,
+            Tag_Line = 1609,
+            DisLine = 1810,
+            DisMarker,
+            DisTag
         }
-        /// <summary>
-        /// Markers Zindex 枚举 (Zindex越大,图层越靠前)
-        /// </summary>
-        public enum Markers_ZIndex
+
+        public enum GMapMarkers_ZIndex
         {
-            RouteMarker = 1,
-            TrackMarker,
+            PolygonPath = 1,
+            AirRoute,
+            MT_Track,
             PolygonMarker,
-            WaypointMarker,
-            TargetMarker,
-            TagMarker
+            TextMarker,
+            CourseBeacon,
+            MovingTarget,
+            MT_Tag,
+            Tag_Line,
+            DisLine,
+            DisMarker,
+            DisTag
         }
 
         /// <summary>
@@ -338,6 +353,33 @@ namespace GMap.NET.WindowsPresentation
         // Using a DependencyProperty as the backing store for Bearing.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BearingProperty =
             DependencyProperty.Register("Bearing", typeof(float), typeof(GMapMarker), new PropertyMetadata(0.0f));
+
+        /// <summary>
+        /// 地图测距文本显示
+        /// </summary>
+        public string DistanceValue
+        {
+            get { return (string)GetValue(DistanceValueProperty); }
+            set { SetValue(DistanceValueProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DistanceValue.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DistanceValueProperty =
+            DependencyProperty.Register("DistanceValue", typeof(string), typeof(GMapMarker), new PropertyMetadata(""));
+
+
+
+        public bool IsTextFocusable
+        {
+            get { return (bool)GetValue(IsTextFocusableProperty); }
+            set { SetValue(IsTextFocusableProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsTextFocusable.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsTextFocusableProperty =
+            DependencyProperty.Register("IsTextFocusable", typeof(bool), typeof(GMapMarker), new PropertyMetadata(true));
+
+
 
         /// <summary>
         /// 更新活动目标(飞机\坦克等)属性

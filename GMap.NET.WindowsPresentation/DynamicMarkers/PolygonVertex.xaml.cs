@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace GMap.NET.WindowsPresentation
 {
     /// <summary>
-    /// Callout.xaml 的交互逻辑
+    /// PolygonVertex.xaml 的交互逻辑
     /// </summary>
-    public partial class Callout : UserControl
+    public partial class PolygonVertex : UserControl
     {
-        public Callout(/*string tagcontent*/)
+        public PolygonVertex()
         {
             InitializeComponent();
-            //TagContent.Text = tagcontent;
         }
     }
 }

@@ -2526,8 +2526,9 @@ namespace GMap.NET.WindowsPresentation
 
         List<PointLatLng> RouteMarkerPoints = new List<PointLatLng>();
         List<PointLatLng> TrackMarkerPoints = new List<PointLatLng>();
-        PointLatLng TrackMarkerPos_Old;
-        PointLatLng TrackMarkerPos_New;
+        public List<PointLatLng> disPoints = new List<PointLatLng>();
+        public List<PointLatLng> polyPoints = new List<PointLatLng>();
+
 
         /// <summary>
         /// 是否可拖拽航点marker
@@ -2577,41 +2578,30 @@ namespace GMap.NET.WindowsPresentation
                 gMapControl.Markers.Remove(clear.ElementAt(0));
             };
         }
-        /// <summary>
-        /// 删除鼠标捕获的航点marker
-        /// </summary>
-        /// <param name="gMapControl"></param>
-        public void RemoveSelectedMarker(GMapControl gMapControl)
-        {
-            var clear = gMapControl.Markers.Where(marker => marker.ID >= 10000);
-            while (clear.Count() > 0)
-            {
-                int num = clear.ElementAt(0).WPNumber;
-                gMapControl.Markers.Remove(clear.ElementAt(0));
 
-                var wpmarker = gMapControl.Markers.Where(marker => marker.WPNumber >= num);
-                for (int i = 0; i < wpmarker.Count(); i++)
-                {
-                    wpmarker.ElementAt(i).WPNumber = (i + num);
-                }
-            };
+
+        public double GetViewAreaCenterLng()
+        {
+            return (ViewArea.Left + ViewArea.Right) * 0.5;
         }
 
-        /// <summary>
-        /// 刷新航点路径Marker
-        /// </summary>
-        /// <param name="gMapControl"></param>
-        public void UpdateRouteMarker(GMapControl gMapControl)
+        public double GetViewAreaCenterLat()
         {
-            var ssss = gMapControl.Markers.Where(marker => marker.ID == (int)Markers_ID.WaypointMarker
-            || marker.ID >= 10000);
-            gMapControl.RouteMarkerPoints.Clear();
-            for (int i = 0; i < ssss.Count(); i++)
+            return (ViewArea.Top + ViewArea.Bottom) * 0.5;
+        }
+
+        public bool PointInViewArea(double fLng, double fLat)
+        {
+            bool result = false;
+            double num = GetViewAreaCenterLng() - ViewArea.WidthLng * 0.9 * 0.5;
+            double num2 = GetViewAreaCenterLng() + ViewArea.WidthLng * 0.8 * 0.5;
+            double num3 = GetViewAreaCenterLat() + ViewArea.HeightLat * 0.8 * 0.5;
+            double num4 = GetViewAreaCenterLat() - ViewArea.HeightLat * 0.9 * 0.5;
+            if (fLng > num && fLng < num2 && fLat > num4 && fLat < num3)
             {
-                gMapControl.RouteMarkerPoints.Add(ssss.ElementAt(i).Position);
+                result = true;
             }
-            GMapRoute gMapRoute = new GMapRoute(Markers_ID.RouteMarker, Markers_ZIndex.RouteMarker, 
-                gMapControl.RouteMarkerPoints, Colors.Yellow, 4, gMapControl);
+            return result;
         }
 
         /// <summary>
@@ -2621,16 +2611,16 @@ namespace GMap.NET.WindowsPresentation
         /// <param name="targetMarker"></param>
         /// <param name="pointLatLng"></param>
         /// <param name="bearing"></param>
-        public void UpdateTrackMarker(GMapControl gMapControl, TargetMarker targetMarker, PointLatLng pointLatLng, float bearing)
-        {
-            TrackMarkerPos_Old = targetMarker.Position;
-            targetMarker.UpdateTargetProperty(targetMarker, pointLatLng, bearing);
-            TrackMarkerPos_New = targetMarker.Position;
+        //public void UpdateTrackMarker(GMapControl gMapControl, TargetMarker targetMarker, PointLatLng pointLatLng, float bearing)
+        //{
+        //    TrackMarkerPos_Old = targetMarker.Position;
+        //    targetMarker.UpdateTargetProperty(targetMarker, pointLatLng, bearing);
+        //    TrackMarkerPos_New = targetMarker.Position;
 
-            if (TrackMarkerPos_New != TrackMarkerPos_Old) TrackMarkerPoints.Add(TrackMarkerPos_New);
-            GMapRoute gMapRoute = new GMapRoute(Markers_ID.TrackMarker, Markers_ZIndex.TrackMarker,
-                TrackMarkerPoints, Colors.Red, 4, gMapControl);
-        }
+        //    if (TrackMarkerPos_New != TrackMarkerPos_Old) TrackMarkerPoints.Add(TrackMarkerPos_New);
+        //    GMapRoute gMapRoute = new GMapRoute(Markers_ID.TrackMarker, Markers_ZIndex.TrackMarker,
+        //        TrackMarkerPoints, Colors.Red, 4, gMapControl);
+        //}
         #endregion
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }

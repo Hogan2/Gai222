@@ -22,7 +22,7 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         /// 
         /// </summary>
-        public Circle(WayPointMarker wayPointMarker)
+        public Circle(GMapMarker gMapMarker)
         {
             InitializeComponent();
             //<!--航点：&#x0a;纬度：&#x0a;经度：&#x0a;高度：&#x0a;空速：-->

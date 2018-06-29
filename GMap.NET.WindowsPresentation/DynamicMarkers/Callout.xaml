@@ -9,7 +9,7 @@
               L 471.969,429.682L 455.135,429.682C 452.375,429.682 450.136,427.444 450.136,424.682L 450.136,369.682
               C 450.136,366.92 452.375,364.683 455.135,364.683 Z "/>
 
-        <TextBlock x:Name="TagContent" Text="航点：&#x0a;经度：&#x0a;纬度：&#x0a;高度：&#x0a;空速：" FontSize="13" Width="130"
+        <TextBlock x:Name="TagContent" Text="{Binding TagetText}" FontSize="13" Width="130"
                    VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,1,0,0"/>
 
     </Grid>
