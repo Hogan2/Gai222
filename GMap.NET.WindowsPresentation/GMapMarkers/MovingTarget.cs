@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -39,26 +40,16 @@ namespace GMap.NET.WindowsPresentation
 
             AirPlane1.MouseEnter += new MouseEventHandler(MyTarget_MouseEnter);
             AirPlane1.MouseLeave += new MouseEventHandler(MyTarget_MouseLeave);
-            AirPlane1.MouseDown += new MouseButtonEventHandler(MyTarget_MouseDown);
+            AirPlane1.MouseLeftButtonUp += new MouseButtonEventHandler(AirPlane1_MouseLeftButtonUp);
+            AirPlane1.MouseLeftButtonDown += new MouseButtonEventHandler(AirPlane1_MouseLeftButtonDown);
         }
 
-        private void MyTarget_MouseLeave(object sender, MouseEventArgs e)
+        private void AirPlane1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Map.IsWPMarkerCanAdd = true;
-            ZIndex -= 20000;
-
-        }
-
-        private void MyTarget_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Map.IsWPMarkerCanAdd = false;
-            ZIndex += 20000;
-        }
-
-        private void MyTarget_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (!AirPlane1.IsMouseCaptured)
             {
+                Mouse.Capture(AirPlane1);
+                ID += 20000;
                 if (IsTagVisible)
                 {
                     MT_Tag1.IsVisable(airplane_id, true);
@@ -69,6 +60,26 @@ namespace GMap.NET.WindowsPresentation
                 }
                 IsTagVisible = !IsTagVisible;
             }
+        }
+
+        private void AirPlane1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (AirPlane1.IsMouseCaptured)
+            {
+                Mouse.Capture(null);
+                ID -= 20000;
+
+            }
+        }
+
+        private void MyTarget_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Map.IsWPMarkerCanAdd = true;
+        }
+
+        private void MyTarget_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Map.IsWPMarkerCanAdd = false;
         }
 
         public void Add()
@@ -93,11 +104,11 @@ namespace GMap.NET.WindowsPresentation
 
         public void RemoveSelected()
         {
-            var clear = Map.Markers.Where(marker => marker.ZIndex >= 20000 && marker.ZIndex < 30000);////////////
+            var clear = Map.Markers.Where(marker => marker.ID >= 20000 && marker.ID < 30000);////////////
             int id = 0;
             if(clear.Count() > 0)
             {
-                id = clear.ElementAt(0).ID - (int)GMapMarkers_ID.MovingTarget;
+                id = clear.ElementAt(0).ID -20000- (int)GMapMarkers_ID.MovingTarget;
                 MT_Tag1.Remove(id);
                 MT_Track1.RemoveTrack(id);
                 Map.Markers.Remove(clear.ElementAt(0));
@@ -139,7 +150,7 @@ namespace GMap.NET.WindowsPresentation
             PointLatLng TrackMarkerPos_Old;
             PointLatLng TrackMarkerPos_New;
 
-            var clear = Map.Markers.Where(marker => marker.ID == (int)GMapMarkers_ID.MovingTarget + id);
+            var clear = Map.Markers.Where(marker => marker.ID == (int)GMapMarkers_ID.MovingTarget + id );
             var clear1 = Map.Markers.Where(marker => marker.ID == (int)GMapMarkers_ID.MT_Tag + id);
 
             if (clear.Count() > 0 && clear1.Count() > 0)
