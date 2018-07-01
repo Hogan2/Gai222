@@ -96,7 +96,6 @@
       <DependentUpon>MyPolygon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TargetMarker.cs" />
     <Compile Include="GMapMarkers\TextMarker.cs" />
     <Compile Include="DynamicMarkers\Text_Marker.xaml.cs">
       <DependentUpon>Text_Marker.xaml</DependentUpon>
