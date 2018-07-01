@@ -18,13 +18,18 @@
             <Button Content="清除航迹" Click="Button7_Click"/>
             <Button x:Name="hide" Content="隐藏航迹" Click="Button8_Click"/>
             <Separator Background="Gray"/>
-            <Button Content="添加多边形标签" Click="Button3_Click"/>
-            <Button Content="删除多边形标签" Click="Button3_1_Click"/>
-            <Button Content="存储多边形标签" Click="Button3_2_Click"/>
-
+            <Button Content="添加多边形标记" Click="Button3_Click"/>
+            <Button Content="删除多边形标记" Click="Button3_1_Click"/>
+            <Button Content="保存多边形标记" Click="Button3_2_Click"/>
+            <Button Content="读取多边形标记" Click="Button3_3_Click"/>
+            <Button Content="添加新多边形" Click="Button3_4_Click"/>
+            <Button Content="保存标记" Click="Button3_5_Click"/>
+            <Button Content="读取标记" Click="Button3_6_Click"/>
             <Separator Background="Gray"/>
             <Button Content="添加文本" Click="Button4_Click"/>
             <Button Content="删除文本" Click="Button4_1_Click"/>
+            <Button Content="保存文本" Click="Button4_3_Click"/>
+            <Button Content="读取文本" Click="Button4_4_Click"/>
             <Button x:Name="focus" Content="文本编辑" Click="Button4_2_Click"/>
             <Separator Background="Gray"/>
             <Button Content="测距" Click="Button5_Click"/>

@@ -30,6 +30,7 @@ namespace MapTest.Views
         TextMarker textMarker;
         double lng = 0.0;
         int WPLine = 1;
+        int Polygons = 1;
         List<PointLatLng> pont1 = new List<PointLatLng>();
 
         float bear = 0.0f;
@@ -83,6 +84,8 @@ namespace MapTest.Views
             GMapCtrl.IgnoreMarkerOnMouseWheel = true;
             GMapCtrl.DragButton = MouseButton.Right;
             GMapCtrl.ShowTileGridLines = false;
+            GMapCtrl.IsWPMarkerCanRemove = false;
+
         }
 
         int i = 0;
@@ -103,11 +106,11 @@ namespace MapTest.Views
                             CourseBeacon1.Add();
                         }
                         break;
-                    case TooType.DeleteWP:
-                        {
-                            CourseBeacon1.RemoveSelected();
-                        }
-                        break;
+                    //case TooType.DeleteWP:
+                    //    {
+                    //        CourseBeacon1.RemoveSelected();
+                    //    }
+                    //    break;
                     case TooType.AddTarget:
                         {
                             i++;
@@ -123,27 +126,26 @@ namespace MapTest.Views
                         break;
                     case TooType.AddPolygonMarker:
                         {
-                            polygonMarker = new PolygonMarker(1, newWayPoint, GMapCtrl);
+                            polygonMarker = new PolygonMarker(Polygons, newWayPoint, GMapCtrl);
                             polygonMarker.Add();
                         }
                         break;
-                    case TooType.DePolygonMarker:
-                        {
-                            polygonMarker.RemoveSelected();
-                        }
-                        break;
+                    //case TooType.DePolygonMarker:
+                    //    {
+                            
+                    //    }
+                    //    break;
                     case TooType.AddText:
                         {
-                            textMarker = new TextMarker(newWayPoint, GMapCtrl);
+                            textMarker = new TextMarker(newWayPoint, "新建文本", GMapCtrl);
                             textMarker.Add();
                         }
                         break;
-                    case TooType.DeText:
-                        {
-                            if (textMarker != null) textMarker.IsTextMarkerFocusable(false);
-
-                        }
-                        break;
+                    //case TooType.DeText:
+                    //    {
+                    //        textMarker.RemoveSelected();
+                    //    }
+                    //    break;
                     case TooType.Distance:
                         {
                             DisMarker1 = new DisMarker(newWayPoint, GMapCtrl);
@@ -193,12 +195,16 @@ namespace MapTest.Views
         {
             type = TooType.AddWP;
             GMapCtrl.IsWPMarkerCanGrag = true;
+            GMapCtrl.IsWPMarkerCanRemove = false;
+            //GMapCtrl.RemoveMarkerAtZindex(GMapCtrl, (int)GMapMarkers_ZIndex.CourseBeacon);
+            //GMapCtrl.RemoveMarkerAtZindex(GMapCtrl, (int)GMapMarkers_ZIndex.AirRoute);
         }
 
         private void Button1_1_Click(object sender, RoutedEventArgs e)
         {
             type = TooType.DeleteWP;
             GMapCtrl.IsWPMarkerCanGrag = false;
+            GMapCtrl.IsWPMarkerCanRemove = true;
         }
 
         private void Button1_2_Click(object sender, RoutedEventArgs e)
@@ -208,40 +214,12 @@ namespace MapTest.Views
 
         private void Button1_3_Click(object sender, RoutedEventArgs e)
         {
-            CourseBeacon1.OnSave();
+            GMapCtrl.SaveWPTMarkers(GMapCtrl);
         }
 
         private void Button1_4_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new OpenFileDialog()
-            {
-                Title = "打开航点文件",
-                CheckPathExists = true,
-                CheckFileExists = true,
-                Filter = "wpt files (*.wpt)|*.wpt|All files|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-            };
-            if (dlg.ShowDialog() == true)
-            {
-                if (CourseBeacon1 != null) CourseBeacon1.RemoveAll();
-                Regex regex = new Regex("\r\n");
-                Regex regex1 = new Regex(" ");
-
-                string ss = File.ReadAllText(dlg.FileName);
-                string[] dd = regex.Split(ss);
-                foreach (string ff in dd)
-                {
-                    if (ff != "")
-                    {
-                        string[] gg = regex1.Split(ff);
-                        //读取文件添加航点时isfirstenter为false
-                        CourseBeacon1 = new CourseBeacon(Convert.ToInt16(gg[0]),
-                            new PointLatLng(Convert.ToDouble(gg[1]), Convert.ToDouble(gg[2])),false, GMapCtrl);
-                        CourseBeacon1.Add();
-                    }
-
-                }
-            }
+            GMapCtrl.ReadWPTMarkers(GMapCtrl);
         }
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
@@ -255,16 +233,42 @@ namespace MapTest.Views
         private void Button3_Click(object sender, RoutedEventArgs e)
         {
             type = TooType.AddPolygonMarker;
+            GMapCtrl.IsPolygonMarkerCanDrag = true;
+            //GMapCtrl.RemoveMarkerAtZindex(GMapCtrl, (int)GMapMarkers_ZIndex.PolygonMarker);
+            //GMapCtrl.RemoveMarkerAtZindex(GMapCtrl, (int)GMapMarkers_ZIndex.PolygonMarker);
         }
 
         private void Button3_1_Click(object sender, RoutedEventArgs e)
         {
             type = TooType.DePolygonMarker;
+            GMapCtrl.IsPolygonMarkerCanDrag = false;
         }
 
         private void Button3_2_Click(object sender, RoutedEventArgs e)
         {
+            GMapCtrl.SavePolygonMarkers(GMapCtrl);
+        }
 
+        private void Button3_3_Click(object sender, RoutedEventArgs e)
+        {
+            GMapCtrl.IsPolygonMarkerCanDrag = false;
+            GMapCtrl.ReadPolygonMarkers(GMapCtrl);
+        }
+
+        private void Button3_4_Click(object sender, RoutedEventArgs e)
+        {
+            Polygons++;
+        }
+
+        private void Button3_5_Click(object sender, RoutedEventArgs e)
+        {
+            GMapCtrl.SavePTMarkers(GMapCtrl);
+        }
+
+        private void Button3_6_Click(object sender, RoutedEventArgs e)
+        {
+            GMapCtrl.IsPolygonMarkerCanDrag = false;
+            GMapCtrl.ReadPTMarkers(GMapCtrl);
         }
 
         private void Button4_Click(object sender, RoutedEventArgs e)
@@ -275,15 +279,28 @@ namespace MapTest.Views
         private void Button4_1_Click(object sender, RoutedEventArgs e)
         {
             type = TooType.DeText;
+            GMapCtrl.IsTextMarkerFocusable(false, GMapCtrl);
         }
 
         private void Button4_2_Click(object sender, RoutedEventArgs e)
         {
-            if (textMarker != null) textMarker.IsTextMarkerFocusable(IsTextFocusable);
+            GMapCtrl.IsTextMarkerFocusable(IsTextFocusable, GMapCtrl);
             if (IsTextFocusable) focus.Content = "文本编辑";
             else focus.Content = "文本聚焦";
             IsTextFocusable = !IsTextFocusable;
         }
+
+        private void Button4_3_Click(object sender, RoutedEventArgs e)
+        {
+            //GMapCtrl.IsTextMarkerFocusable(false, GMapCtrl);
+            GMapCtrl.SaveTextMarkers(GMapCtrl);
+        }
+
+        private void Button4_4_Click(object sender, RoutedEventArgs e)
+        {
+            GMapCtrl.ReadTextMarkers(GMapCtrl);
+        }
+
         private void Button5_Click(object sender, RoutedEventArgs e)
         {
             type = TooType.Distance;

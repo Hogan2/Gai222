@@ -44,6 +44,15 @@ namespace GMap.NET.WindowsPresentation
             WPMarker.MouseLeftButtonDown += new MouseButtonEventHandler(WPMarker_MouseLeftButtonDown);
             WPMarker.MouseEnter += new MouseEventHandler(WPMarker_MouseEnter);
             WPMarker.MouseLeave += new MouseEventHandler(WPMarker_MouseLeave);
+            WPMarker.MouseDoubleClick += new MouseButtonEventHandler(WPMarker_MouseDoubleClick);
+        }
+
+        private void WPMarker_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed&& Map.IsWPMarkerCanRemove)
+            {
+                RemoveSelected();
+            }
 
         }
 
@@ -78,14 +87,18 @@ namespace GMap.NET.WindowsPresentation
         }
         private void WPMarker_MouseLeave(object sender, MouseEventArgs e)
         {
-            ZIndex -= 10000;
+            ID -= 10000;
+
+            //ZIndex -= 10000;
             Map.IsWPMarkerCanAdd = true;
             isFirstEnter = false;
             WPMarker.MyTag.Visibility = Visibility.Hidden;
         }
         private void WPMarker_MouseEnter(object sender, MouseEventArgs e)
         {
-            ZIndex += 10000;
+            ID += 10000;
+
+            //ZIndex += 10000;
             Map.IsWPMarkerCanAdd = false;
             if (!isFirstEnter) WPMarker.MyTag.Visibility = Visibility.Visible;
         }
@@ -95,7 +108,7 @@ namespace GMap.NET.WindowsPresentation
             if (!WPMarker.IsMouseCaptured)
             {
                 Mouse.Capture(WPMarker);
-                ID += 10000;
+                //ID += 10000;
 
                 WPMarker.bigCircle.Fill = new SolidColorBrush
                 {
@@ -109,7 +122,7 @@ namespace GMap.NET.WindowsPresentation
             if (WPMarker.IsMouseCaptured)
             {
                 Mouse.Capture(null);
-                ID -= 10000;
+                //ID -= 10000;
 
                 WPMarker.bigCircle.Fill = new SolidColorBrush
                 {
@@ -223,7 +236,7 @@ namespace GMap.NET.WindowsPresentation
 
         public void OnRead()
         {
-
+            Map.ReadWPTMarkers(Map);
         }
     }
 }

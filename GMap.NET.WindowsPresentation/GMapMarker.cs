@@ -381,6 +381,18 @@ namespace GMap.NET.WindowsPresentation
 
 
 
+
+        public string TextMarkerContent
+        {
+            get { return (string)GetValue(TextMarkerContentProperty); }
+            set { SetValue(TextMarkerContentProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TextMarkerContent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TextMarkerContentProperty =
+            DependencyProperty.Register("TextMarkerContent", typeof(string), typeof(GMapMarker), new PropertyMetadata("新建文本"));
+
+
         /// <summary>
         /// 更新活动目标(飞机\坦克等)属性
         /// </summary>

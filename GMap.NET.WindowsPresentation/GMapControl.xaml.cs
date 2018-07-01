@@ -1,6 +1,7 @@
 ﻿using GMap.NET.Internals;
 using GMap.NET.MapProviders;
 using GMap.NET.Projections;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -2541,6 +2543,8 @@ namespace GMap.NET.WindowsPresentation
             set { isWPMakerCanDrag = value; }
         }
 
+        public bool IsPolygonMarkerCanDrag { get; set; }
+        public bool IsWPMarkerCanRemove { get; set; }
         /// <summary>
         /// 是否可添加航点marker
         /// </summary>
@@ -2604,6 +2608,261 @@ namespace GMap.NET.WindowsPresentation
             return result;
         }
 
+        public void ReadWPTMarkers(GMapControl gMapControl)
+        {
+            var dlg = new OpenFileDialog()
+            {
+                Title = "打开航点文件",
+                CheckPathExists = true,
+                CheckFileExists = true,
+                Filter = "wpt files (*.wpt)|*.wpt|All files|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.CourseBeacon);
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.AirRoute);
+                Regex regex = new Regex("\r\n");
+                Regex regex1 = new Regex(" ");
+
+                string ss = System.IO.File.ReadAllText(dlg.FileName);
+                string[] dd = regex.Split(ss);
+                foreach (string ff in dd)
+                {
+                    if (ff != "")
+                    {
+                        string[] gg = regex1.Split(ff);
+                        //读取文件添加航点时isfirstenter为false
+                        CourseBeacon CourseBeacon1 = new CourseBeacon(Convert.ToInt16(gg[0]),
+                            new PointLatLng(Convert.ToDouble(gg[1]), Convert.ToDouble(gg[2])), false, gMapControl);
+                        CourseBeacon1.Add();
+                    }
+
+                }
+            }
+        }
+        public void SaveWPTMarkers(GMapControl gMapControl)
+        {
+            string sss = "";
+            var ssss = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.CourseBeacon);
+            if (ssss.Count() > 0)
+            {
+                for (int i = 0; i < ssss.Count(); i++)
+                {
+                    string ss = (ssss.ElementAt(i).ID - (int)GMapMarkers_ID.CourseBeacon).ToString() + " "
+                        + ssss.ElementAt(i).Position.Lat.ToString() + " " + ssss.ElementAt(i).Position.Lng.ToString() + "\r\n";
+                    sss += ss;
+                }
+            }
+
+            var dlg = new SaveFileDialog()
+            {
+                Title = "保存航点",
+                DefaultExt = "txt",
+                Filter = "wpt files (*.wpt)|*.wpt|All files|*.*",
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(dlg.FileName, sss);
+            }
+        }
+        public void ReadPolygonMarkers(GMapControl gMapControl)
+        {
+            var dlg = new OpenFileDialog()
+            {
+                Title = "打开多边形文件",
+                CheckPathExists = true,
+                CheckFileExists = true,
+                Filter = "poly files (*.poly)|*.poly|All files|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.PolygonMarker);
+                Regex regex = new Regex("\r\n");
+                Regex regex1 = new Regex(" ");
+
+                string ss = System.IO.File.ReadAllText(dlg.FileName);
+                string[] dd = regex.Split(ss);
+                foreach (string ff in dd)
+                {
+                    if (ff != "")
+                    {
+                        string[] gg = regex1.Split(ff);
+                        PolygonMarker polygonMarker = new PolygonMarker(Convert.ToInt16(gg[0]),
+                            new PointLatLng(Convert.ToDouble(gg[1]), Convert.ToDouble(gg[2])), gMapControl);
+                        polygonMarker.Add();
+                    }
+                }
+            }
+        }
+        public void SavePolygonMarkers(GMapControl gMapControl)
+        {
+            string sss = "";
+            var ssss = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.PolygonMarker);
+            if (ssss.Count() > 0)
+            {
+                for (int i = 0; i < ssss.Count(); i++)
+                {
+                    string ss = (ssss.ElementAt(i).ID - (int)GMapMarkers_ID.PolygonMarker).ToString() + " "
+                        + ssss.ElementAt(i).Position.Lat.ToString() + " " + ssss.ElementAt(i).Position.Lng.ToString() + "\r\n";
+                    sss += ss;
+                }
+            }
+
+            var dlg = new SaveFileDialog()
+            {
+                Title = "保存多边形标记",
+                DefaultExt = "txt",
+                Filter = "poly files (*.poly)|*.poly|All files|*.*",
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(dlg.FileName, sss);
+            }
+        }
+        public void ReadTextMarkers(GMapControl gMapControl)
+        {
+            var dlg = new OpenFileDialog()
+            {
+                Title = "打开文本标记文件",
+                CheckPathExists = true,
+                CheckFileExists = true,
+                Filter = "txt files (*.txt)|*.txt|All files|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.TextMarker);
+
+                Regex regex = new Regex("\r\n");
+                Regex regex1 = new Regex(" ");
+
+                string ss = System.IO.File.ReadAllText(dlg.FileName);
+                string[] dd = regex.Split(ss);
+                foreach (string ff in dd)
+                {
+                    if (ff != "")
+                    {
+                        string[] gg = regex1.Split(ff);
+                        TextMarker textMarker = new TextMarker(new PointLatLng(Convert.ToDouble(gg[0]),
+                            Convert.ToDouble(gg[1])), gg[2], gMapControl);
+                        textMarker.Add();
+                    }
+                }
+            }
+        }
+        public void SaveTextMarkers(GMapControl gMapControl)
+        {
+            string sss = "";
+            var ssss = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.TextMarker);
+            if (ssss.Count() > 0)
+            {
+                for (int i = 0; i < ssss.Count(); i++)
+                {
+                    string ss = ssss.ElementAt(i).Position.Lat.ToString() + " " + ssss.ElementAt(i).Position.Lng.ToString() + " "
+                        + ssss.ElementAt(i).TextMarkerContent + "\r\n";
+                    sss += ss;
+                }
+            }
+
+            var dlg = new SaveFileDialog()
+            {
+                Title = "保存文本标记",
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.txt|All files|*.*",
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(dlg.FileName, sss);
+            }
+        }
+        public void IsTextMarkerFocusable(bool isfocusable, GMapControl gMapControl)
+        {
+            var clear = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.TextMarker);
+            if (clear.Count() > 0)
+            {
+                for (int i = 0; i < clear.Count(); i++)
+                {
+                    clear.ElementAt(i).IsTextFocusable = isfocusable;
+                }
+            }
+        }
+        public void ReadPTMarkers(GMapControl gMapControl)
+        {
+            var dlg = new OpenFileDialog()
+            {
+                Title = "打开标记文件",
+                CheckPathExists = true,
+                CheckFileExists = true,
+                Filter = "mark files (*.mark)|*.mark|All files|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.PolygonMarker);
+                RemoveMarkerAtZindex(gMapControl, (int)GMapMarkers_ZIndex.TextMarker);
+
+                Regex regex = new Regex("\r\n");
+                Regex regex1 = new Regex(" ");
+
+                string ss = System.IO.File.ReadAllText(dlg.FileName);
+                string[] dd = regex.Split(ss);
+                foreach (string ff in dd)
+                {
+                    if (ff != "")
+                    {
+                        string[] gg = regex1.Split(ff);
+                        if (gg[0] == "poly")
+                        {
+                            PolygonMarker polygonMarker = new PolygonMarker(Convert.ToInt16(gg[1]),
+                                new PointLatLng(Convert.ToDouble(gg[2]), Convert.ToDouble(gg[3])), gMapControl);
+                            polygonMarker.Add();
+                        }
+                        if (gg[0] == "text")
+                        {
+                            TextMarker textMarker = new TextMarker(new PointLatLng(Convert.ToDouble(gg[1]),
+                                Convert.ToDouble(gg[2])), gg[3], gMapControl);
+                            textMarker.Add();
+                        }
+                    }
+                }
+            }
+        }
+        public void SavePTMarkers(GMapControl gMapControl)
+        {
+            string sss = "";
+            var ssss = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.PolygonMarker);
+            if (ssss.Count() > 0)
+            {
+                for (int i = 0; i < ssss.Count(); i++)
+                {
+                    string ss = "poly " + (ssss.ElementAt(i).ID - (int)GMapMarkers_ID.PolygonMarker).ToString() + " "
+                        + ssss.ElementAt(i).Position.Lat.ToString() + " " + ssss.ElementAt(i).Position.Lng.ToString() + "\r\n";
+                    sss += ss;
+                }
+            }
+            var ssss1 = gMapControl.Markers.Where(marker => marker.ZIndex == (int)GMapMarkers_ZIndex.TextMarker);
+            if (ssss1.Count() > 0)
+            {
+                for (int i = 0; i < ssss1.Count(); i++)
+                {
+                    string ss = "text " + ssss1.ElementAt(i).Position.Lat.ToString() + " " + ssss1.ElementAt(i).Position.Lng.ToString() + " "
+                        + ssss1.ElementAt(i).TextMarkerContent + "\r\n";
+                    sss += ss;
+                }
+            }
+            var dlg = new SaveFileDialog()
+            {
+                Title = "保存标记",
+                DefaultExt = "txt",
+                Filter = "mark files (*.mark)|*.mark|All files|*.*",
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(dlg.FileName, sss);
+            }
+        }
         /// <summary>
         /// 刷新航迹Marker
         /// </summary>
